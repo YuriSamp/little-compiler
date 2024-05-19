@@ -19,7 +19,7 @@ func TestLetStatments(t *testing.T) {
 	l := lexer.New(input)
 	p := New(l)
 
-	program := p.parseProgram()
+	program := p.ParseProgram()
 
 	if program == nil {
 		t.Fatalf("ParseProgram() returned nil")
