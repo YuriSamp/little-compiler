@@ -26,7 +26,6 @@ func (p *Parser) Errors() []string {
 
 func (p * Parser) peekError (t token.TokenType) {
 	msg := fmt.Sprintf("expected next token to be %s, got %s instead", t, p.peekToken.Type)
-
 	p.errors = append(p.errors, msg)
 }
 
@@ -39,7 +38,7 @@ func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
 
-	for p.curTokenIs(token.EOF) {
+	for !p.curTokenIs(token.EOF) {
 		stmt := p.parseStatement()
 		if stmt != nil {
 			program.Statements = append(program.Statements, stmt)
@@ -92,7 +91,8 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	if p.peekTokenIs(t) {
 		p.nextToken()
 		return true
-	}
-
+	} 
+	
+	p.peekError(t)
 	return false
 }
