@@ -39,6 +39,7 @@ const (
 var keywords = map[string]TokenType {
 	"fn": FUNCTION,
 	"let" : LET,
+	"return" : RETURN,
 }
 
 func LookupIdent(ident string)TokenType {
