@@ -10,21 +10,28 @@ type Token struct {
 const (
 	ILLEGAL = "ILLEGAL"
 	EOF = "EOF"
+
 	IDENT = "IDENT"
 	INT = "INT"
+
 	ASSIGN = "="
 	PLUS = "+"
+	MINUS = "-"
 	BANG = "!"
-	ASTERISTK = "*"
+	ASTERISK = "*"
 	SLASH = "/"
+
 	LT = "<"
 	GT = ">"
+
 	COMMA = ","
 	SEMICOLON = ";"
+
 	LPAREN = "("
 	RPAREN = ")"
 	LBRACE = "{"
 	RBRACE = "}"
+
 	FUNCTION = "FUNCTION"
 	LET = "LET"
 	TRUE= "TRUE"
@@ -32,6 +39,7 @@ const (
 	IF = "IF"
 	ELSE = "ELSE"
 	RETURN = "RETURN"
+	
 	EQ = "=="
 	NOT_EQ = "!="
 )

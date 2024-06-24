@@ -73,7 +73,7 @@ func TestNextToken(t *testing.T){
 	{token.SEMICOLON, ";"},
 	{token.BANG, "!"},
 	{token.SLASH, "/"},
-	{token.ASTERISTK, "*"},
+	{token.ASTERISK, "*"},
 	{token.INT, "5"},
 	{token.SEMICOLON, ";"},
 	{token.INT, "5"},
