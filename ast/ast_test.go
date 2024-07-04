@@ -1,18 +1,18 @@
 package ast
 
 import (
-	"interpreter/token"
+	"monkey/token"
 	"testing"
 )
 
 func TestString(t *testing.T) {
 	program := &Program{
-		Statements: []Statement {
+		Statements: []Statement{
 			&LetStatement{
 				Token: token.Token{Type: token.LET, Literal: "let"},
-				Name:  &Identifier{
-					Token : token.Token{Type: token.IDENT,Literal: "myvar"},
-					Value: "myvar",
+				Name: &Identifier{
+					Token: token.Token{Type: token.IDENT, Literal: "myVar"},
+					Value: "myVar",
 				},
 				Value: &Identifier{
 					Token: token.Token{Type: token.IDENT, Literal: "anotherVar"},
@@ -22,7 +22,7 @@ func TestString(t *testing.T) {
 		},
 	}
 
-	if program.String() != "let myvar = anotherVar;" {
-		t.Errorf("program.String() wrong. got =%q", program.String())
+	if program.String() != "let myVar = anotherVar;" {
+		t.Errorf("program.String() wrong. got=%q", program.String())
 	}
 }

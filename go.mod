@@ -1,3 +1,3 @@
-module interpreter
+module monkey
 
-go 1.22.0
+go 1.14
