@@ -14,6 +14,8 @@ type Object interface {
 	Inspect() string
 }
 
+type BuiltInFunction func(args ...Object) Object
+
 const (
 	INTEGER_OBJ = "INTEGER"
 	BOOLEAN_OBJ = "BOOLEAN"
@@ -21,6 +23,8 @@ const (
 	NULL_OBJ = "NULL"
 	ERROR_OBJ = "ERROR"
 	FUNCTION_OBJ = "FUNCTION"
+	STRING_OBJ = "STRING"
+	BUILTIN_OBJ = "BUILTIN"
 )
 
 type Integer struct {
@@ -107,4 +111,28 @@ func(f *Function) Inspect() string {
 	out.WriteString("\n}")
 
 	return out.String()
+}
+
+type String struct {
+	Value string
+}
+
+func(s *String) Type() ObjectType {
+	return STRING_OBJ
+}
+
+func(s *String) Inspect() string {
+	return s.Value
+}
+
+type BuiltIn struct {
+	Fn BuiltInFunction
+}
+
+func(b *BuiltIn) Type() ObjectType{
+	return FUNCTION_OBJ
+}
+
+func(b *BuiltIn) Inspect() string {
+	return "builtin function"
 }
