@@ -34,6 +34,7 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
+		// compiled code
 		comp := compiler.New()
 		err := comp.Compile(program)
 		if err != nil {
@@ -54,6 +55,7 @@ func Start(in io.Reader, out io.Writer) {
 		io.WriteString(out, lastPopped.Inspect())
 		io.WriteString(out, "\n")
 
+		// interpreted code
 		// evaluated := evaluator.Eval(program,	env)
 
 		// if evaluated != nil {
