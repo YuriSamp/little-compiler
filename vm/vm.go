@@ -210,6 +210,8 @@ func (vm *VM)executeBangOperator() error {
 		return vm.push(False)
 	case False:
 		return vm.push(True)
+	case Null:
+		return vm.push(True)	
 	default:
 		return vm.push(False)		
 	}
@@ -240,6 +242,8 @@ func istTruthy(obj object.Object) bool {
 			return obj.Value
 		case *object.Integer:
 			return obj.Value != 0
+		case *object.Null:
+			return false	
 		default:
 			return true		
 	 }
