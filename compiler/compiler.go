@@ -183,7 +183,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 			if err != nil {
 				return err
 			}
-			
+
 			err = c.Compile(node.Pairs[k])
 
 			if err != nil {
@@ -212,7 +212,21 @@ func (c *Compiler) Compile(node ast.Node) error {
 			c.emit(code.OpConstant, c.addConstant(integer))
 	case *ast.StringLiteral:
 		str := &object.String{Value: node.Value}
-		c.emit(code.OpConstant, c.addConstant(str)) 		
+		c.emit(code.OpConstant, c.addConstant(str))
+	case *ast.IndexExpression:
+		err := c.Compile(node.Left)
+		
+		if err != nil {
+			return err
+		}
+
+		err = c.Compile(node.Index)
+
+		if err != nil {
+			return err
+		}
+
+		c.emit(code.OpIndex)
 	case *ast.Boolean:
 		if node.Value {
 			c.emit(code.OpTrue)
