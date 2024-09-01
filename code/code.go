@@ -37,6 +37,9 @@ const (
 	OpArray
 	OpHash
 	OpIndex
+	OpCall
+	OpReturnValue
+	OpReturn
 )
 
 var definitions = map[Opcode]*Definition{
@@ -61,6 +64,9 @@ var definitions = map[Opcode]*Definition{
 	OpArray: {"OpArray", []int{2}},
 	OpHash : {"OpHash", []int{2}},
 	OpIndex : {"OpIndex", []int{}},
+	OpCall: {"Opcall", []int{}},
+	OpReturnValue : {"OpReturnValue", []int{}},
+	OpReturn : {"OpReturn", []int{2}},
 }
 
 func Lookup(op byte) (*Definition, error) {
