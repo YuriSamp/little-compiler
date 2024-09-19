@@ -8,10 +8,11 @@ import (
 type Frame struct {
 	fn *object.CompiledFunction
 	ip int
+	basePointer int
 }
 
-func NewFrame(fn *object.CompiledFunction) *Frame {
-	return &Frame{fn: fn, ip: -1}
+func NewFrame(fn *object.CompiledFunction, basepointer int) *Frame {
+	return &Frame{fn: fn, ip: -1, basePointer: basepointer}
 }
 
 func(f *Frame) Instructions() code.Instructions {

@@ -234,6 +234,60 @@ func TestFirstClassFunctions(t *testing.T) {
 			`,
 			expected: 1,
 		},
+		{
+			input: `
+			let returnsOneReturner = fn() {
+				let returnsOne = fn() { 1; };
+				returnsOne;
+			}
+			returnsOneReturner()()	
+			`,
+			expected: 1,
+		},
+	}
+
+	runVmTest(t, tests)
+}
+
+func TestCallingFunctionsWithBindings(t *testing.T) {
+	tests := []vmTestCase{
+		{
+			input : `
+			let one = fn() {let one =1; one}
+			one();
+			`,
+			expected: 1,
+		},
+		{
+			input: `
+			let oneAndTwo = fn() { let one =1 ; let two = 2; one + two;};
+			oneAndTwo()
+			`,
+			expected: 3,
+		},
+		{
+			input: `
+			let mulOfthree = fn() { let mult = 5; mult * 3;};
+			let mulOfFour = fn() { let mult = 5; mult * 4;};
+			mulOfthree() + mulOfFour()
+			`,
+			expected: 35,
+		},
+		{
+			input: `
+			let globalSeed = 50;
+			let minusOne = fn() {
+					let num = 1
+					globalSeed - num	
+			}
+			let minusTwo = fn() {
+					let two = 2
+					globalSeed - two	
+			}
+			minusOne() + minusTwo()
+			`,
+			expected: 97,
+		},
 	}
 
 	runVmTest(t, tests)
