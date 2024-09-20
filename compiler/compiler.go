@@ -135,7 +135,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 		for _ , p := range node.Parameters {
 			c.symbolTable.Define(p.Value)
 		}
-
+		
 		err := c.Compile(node.Body)
 
 		if err != nil {
@@ -157,6 +157,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 		compiledFn := &object.CompiledFunction{
 			Instructions: instructions,
 			NumLocals: numLocals,
+			NumParameters: len(node.Parameters),
 		}	
 
 		c.emit(code.OpConstant, c.addConstant(compiledFn))
