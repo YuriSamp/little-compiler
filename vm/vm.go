@@ -181,6 +181,8 @@ func (vm *VM) Run() error {
 				return err
 			}
 		case code.OpCall:
+			vm.currentFrame().ip += 1 // gambeta momentanea
+
 			fn, ok := vm.stack[vm.sp -1].(*object.CompiledFunction)
 			
 			if !ok {
