@@ -11,15 +11,15 @@ import (
 )
 
 type vmTestCase struct {
-	input string
+	input    string
 	expected interface{}
 }
 
 func TestIntegerArithmetic(t *testing.T) {
 	tests := []vmTestCase{
-		{"1",1},
-		{"2",2},
-		{"1 + 2 ",3}, 
+		{"1", 1},
+		{"2", 2},
+		{"1 + 2 ", 3},
 		{"2 - 1", 1},
 		{"10 - 6", 4},
 		{"2 * 7", 14},
@@ -41,8 +41,8 @@ func TestIntegerArithmetic(t *testing.T) {
 
 func TestBooleanExpressions(t *testing.T) {
 	tests := []vmTestCase{
-		{"true",true},
-		{"false",false},
+		{"true", true},
+		{"false", false},
 		{"1 < 2", true},
 		{"1 > 2", false},
 		{"1 < 1", false},
@@ -70,17 +70,17 @@ func TestBooleanExpressions(t *testing.T) {
 
 func TestConditionals(t *testing.T) {
 	tests := []vmTestCase{
-		{"if (true) {10}",10},
-		{"if (true) {10} else {20}",10},
-		{"if (false) {10} else {20}",20},
-		{"if (1) {10}",10},
+		{"if (true) {10}", 10},
+		{"if (true) {10} else {20}", 10},
+		{"if (false) {10} else {20}", 20},
+		{"if (1) {10}", 10},
 		{"if (0) {10} else {20}", 20},
-		{"if (1 < 2) {10}",10},
-		{"if (1 < 2) {10} else { 20}",10},
-		{"if (1 > 2) {10} else { 20}",20},
+		{"if (1 < 2) {10}", 10},
+		{"if (1 < 2) {10} else { 20}", 10},
+		{"if (1 > 2) {10} else { 20}", 20},
 		{"if (1 > 2) {10}", Null},
 		{"if (false) {10}", Null},
-		{"if ((if (false) {10})) {10} else {20}",20},
+		{"if ((if (false) {10})) {10} else {20}", 20},
 	}
 
 	runVmTest(t, tests)
@@ -107,10 +107,10 @@ func TestStringExpression(t *testing.T) {
 }
 
 func TestArrayLiterals(t *testing.T) {
-	tests := []vmTestCase {
+	tests := []vmTestCase{
 		{"[]", []int{}},
-		{"[1,2,3]", []int{1,2,3}},
-		{"[1 + 2, 3 * 4, 5 + 6]", []int{3,12,11}},
+		{"[1,2,3]", []int{1, 2, 3}},
+		{"[1 + 2, 3 * 4, 5 + 6]", []int{3, 12, 11}},
 	}
 
 	runVmTest(t, tests)
@@ -120,13 +120,13 @@ func TestHashLiterals(t *testing.T) {
 	tests := []vmTestCase{
 		{"{}", map[object.HashKey]int64{}},
 		{"{1 : 2, 2 : 3}", map[object.HashKey]int64{
-			(&object.Integer{Value : 1}).HashKey(): 2,
-			(&object.Integer{Value : 2}).HashKey(): 3,
+			(&object.Integer{Value: 1}).HashKey(): 2,
+			(&object.Integer{Value: 2}).HashKey(): 3,
 		}},
 		{"{1 + 1: 2 * 2, 3 + 3 : 4 + 4}", map[object.HashKey]int64{
-			(&object.Integer{Value : 2}).HashKey(): 4,
-			(&object.Integer{Value : 6}).HashKey(): 8,
-		}},		
+			(&object.Integer{Value: 2}).HashKey(): 4,
+			(&object.Integer{Value: 6}).HashKey(): 8,
+		}},
 	}
 
 	runVmTest(t, tests)
@@ -188,7 +188,7 @@ func TestFunctionsWithReturnStatement(t *testing.T) {
 				earlyExit()
 			`,
 			expected: 99,
-		}, 
+		},
 		{
 			input: `
 				let earlyExit = fn() {return 99; return 100;}
@@ -198,7 +198,7 @@ func TestFunctionsWithReturnStatement(t *testing.T) {
 		},
 	}
 
-	runVmTest(t ,tests)
+	runVmTest(t, tests)
 }
 
 func TestFunctionsWithoutReturnValue(t *testing.T) {
@@ -209,7 +209,7 @@ func TestFunctionsWithoutReturnValue(t *testing.T) {
 				noReturn()
 			`,
 			expected: Null,
-		}, 
+		},
 		{
 			input: `
 			let noReturn = fn() { };
@@ -221,7 +221,7 @@ func TestFunctionsWithoutReturnValue(t *testing.T) {
 		},
 	}
 
-	runVmTest(t ,tests)
+	runVmTest(t, tests)
 }
 
 func TestFirstClassFunctions(t *testing.T) {
@@ -252,7 +252,7 @@ func TestFirstClassFunctions(t *testing.T) {
 func TestCallingFunctionsWithBindings(t *testing.T) {
 	tests := []vmTestCase{
 		{
-			input : `
+			input: `
 			let one = fn() {let one =1; one}
 			one();
 			`,
@@ -363,27 +363,27 @@ func TestCallingFunctionWithArgumentsAndBindings(t *testing.T) {
 			expected: 50,
 		},
 	}
-	
+
 	runVmTest(t, tests)
 }
 
 func TestCallingFunctionsWithWrongArguments(t *testing.T) {
 	tests := []vmTestCase{
 		{
-			input: `fn(){1;}(1);`,
+			input:    `fn(){1;}(1);`,
 			expected: "wrong number of arguments: want=0, got=1",
 		},
 		{
-			input: `fn(a){a;}();`,
+			input:    `fn(a){a;}();`,
 			expected: "wrong number of arguments: want=1, got=0",
 		},
 		{
-			input: `fn(a, b){a + b;}(1);`,
+			input:    `fn(a, b){a + b;}(1);`,
 			expected: "wrong number of arguments: want=2, got=1",
 		},
 	}
 
-	for _, tt:= range tests {
+	for _, tt := range tests {
 		program := parse(tt.input)
 
 		comp := compiler.New()
@@ -408,6 +408,51 @@ func TestCallingFunctionsWithWrongArguments(t *testing.T) {
 	}
 }
 
+func TestBuiltinsFunctions(t *testing.T) {
+	tests := []vmTestCase{
+		{`len("")`, 0},
+		{`len("five")`, 5},
+		{`len("hello world")`, 11},
+		{
+			"len(1)",
+			&object.Error{
+				Message: "argument to `len` not suported, got INTERGER",
+			},
+		},
+		{`len("one", "two")`,
+			&object.Error{
+				Message: "wrong number of arguments. got=2, want=1",
+			},
+		},
+		{"len([1,2,3])", 3},
+		{`puts("hello", "world!")`, Null},
+		{"first([1,2,3])", 1},
+		{"first([])", Null},
+		{`first(1)`,
+			&object.Error{
+				Message: "argument to `first` must be ARRAY, got INTEGER",
+			},
+		},
+		{"last([1,2,3])", 3},
+		{"last([])", Null},
+		{"last(1)",
+			&object.Error{
+				Message: "argument to `last` must be ARRAY, got INTEGER",
+			},
+		},
+		{`rest([1,2,3])`, []int{2, 3}},
+		{`rest([])`, Null},
+		{"push([],1)", []int{1}},
+		{"push(1,1 )",
+			&object.Error{
+				Message: "arugment to `push` must be ARRAY, got INTEGER",
+			},
+		},
+	}
+
+	runVmTest(t, tests)
+}
+
 func runVmTest(t *testing.T, tests []vmTestCase) {
 	t.Helper()
 
@@ -430,11 +475,11 @@ func runVmTest(t *testing.T, tests []vmTestCase) {
 
 		stackElem := vm.LastPoppedStackElem()
 
-		testExpectedObject(t,tt.expected, stackElem)
+		testExpectedObject(t, tt.expected, stackElem)
 	}
 }
 
-func testExpectedObject(t *testing.T, expected interface{}, actual object.Object){
+func testExpectedObject(t *testing.T, expected interface{}, actual object.Object) {
 	t.Helper()
 
 	switch expected := expected.(type) {
@@ -446,7 +491,7 @@ func testExpectedObject(t *testing.T, expected interface{}, actual object.Object
 		}
 	case string:
 		err := testStringObject(expected, actual)
-		
+
 		if err != nil {
 			t.Errorf("testStringObject failed: %s", err)
 		}
@@ -454,16 +499,16 @@ func testExpectedObject(t *testing.T, expected interface{}, actual object.Object
 		err := testBooleanObject(bool(expected), actual)
 		if err != nil {
 			t.Errorf("testBooleanObject failed: %s", err)
-		}	
+		}
 	case []int:
 		array, ok := actual.(*object.Array)
 		if !ok {
 			t.Errorf("object not Array: %T (%=v)", actual, actual)
 			return
-		}	
+		}
 
 		if len(array.Elements) != len(expected) {
-			t.Errorf("wrong num of elements. want=%d, got=%d",len(expected), len(array.Elements))
+			t.Errorf("wrong num of elements. want=%d, got=%d", len(expected), len(array.Elements))
 			return
 		}
 
@@ -476,7 +521,7 @@ func testExpectedObject(t *testing.T, expected interface{}, actual object.Object
 
 	case map[object.HashKey]int64:
 		hash, ok := actual.(*object.Hash)
-		
+
 		if !ok {
 			t.Errorf("object is not Hash. got=%T (%+v)", actual, actual)
 		}
@@ -503,7 +548,19 @@ func testExpectedObject(t *testing.T, expected interface{}, actual object.Object
 	case *object.Null:
 		if actual != Null {
 			t.Errorf("object is not Null: %T (%+v)", actual, actual)
-		}	
+		}
+
+	case *object.Error:
+		errObj, ok := actual.(*object.Error)
+
+		if !ok {
+			t.Errorf("object is not Error: %T (%+v)", actual, actual)
+			return
+		}
+
+		if errObj.Message != expected.Message {
+			t.Errorf("wrong error message. expected=%q, got=%q", expected.Message, errObj.Message)
+		}
 	}
 }
 
@@ -527,7 +584,6 @@ func testStringObject(expected string, actual object.Object) error {
 	return nil
 }
 
-
 func testIntegerObject(expected int64, actual object.Object) error {
 	result, ok := actual.(*object.Integer)
 
@@ -542,7 +598,7 @@ func testIntegerObject(expected int64, actual object.Object) error {
 }
 
 func testBooleanObject(expected bool, actual object.Object) error {
-	result, ok := actual.(*object.Boolean) 
+	result, ok := actual.(*object.Boolean)
 
 	if !ok {
 		return fmt.Errorf("object is not Boolean. got=%T (%+v)", actual, actual)
@@ -551,6 +607,6 @@ func testBooleanObject(expected bool, actual object.Object) error {
 	if result.Value != expected {
 		return fmt.Errorf("object has wrong value. got=%t, want=%t", result.Value, expected)
 	}
-	
+
 	return nil
 }
