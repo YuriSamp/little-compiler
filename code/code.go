@@ -42,35 +42,37 @@ const (
 	OpCall
 	OpReturnValue
 	OpReturn
+	OpGetBuiltin
 )
 
 var definitions = map[Opcode]*Definition{
-	OpConstant: {"OpConstant", []int{2}},
-	OpAdd: {"OpAdd", []int{}},
-	OpPop: {"OpPop", []int{}},
-	OpSub: {"OpSub", []int{}},
-	OpDiv: {"OpDiv", []int{}},
-	OpMul: {"OpMul", []int{}},
-	OpTrue : {"OpTrue", []int{}},
-	OpFalse : {"OpFalse", []int{}},
-	OpEqual : {"OpEqual", []int{}},
-	OpNotEqual : {"OpNotEqual", []int{}},
-	OpGreaterThan : {"OpGreaterThan", []int{}},
-	OpMinus: {"OpMinus", []int{}},
-	OpBang: {"OpBang", []int{}},
-	OpJumpNotTruthy  : {"OpJumpNotTruthy", []int{2}},
-	OpJump: {"OpJump", []int{2}},
-	OpNull : {"OpNull", []int{}},
-	OpGetGlobal : {"OpGetGlobal", []int{2}},
-	OpSetGlobal : {"OpSetGlobal", []int{2}},
-	OpGetLocal : {"OpGetLocal", []int{1}},
-	OpSetLocal : {"OpSetLocal", []int{1}},
-	OpArray: {"OpArray", []int{2}},
-	OpHash : {"OpHash", []int{2}},
-	OpIndex : {"OpIndex", []int{}},
-	OpCall: {"Opcall", []int{1}},
-	OpReturnValue : {"OpReturnValue", []int{}},
-	OpReturn : {"OpReturn", []int{2}},
+	OpConstant:      {"OpConstant", []int{2}},
+	OpAdd:           {"OpAdd", []int{}},
+	OpPop:           {"OpPop", []int{}},
+	OpSub:           {"OpSub", []int{}},
+	OpDiv:           {"OpDiv", []int{}},
+	OpMul:           {"OpMul", []int{}},
+	OpTrue:          {"OpTrue", []int{}},
+	OpFalse:         {"OpFalse", []int{}},
+	OpEqual:         {"OpEqual", []int{}},
+	OpNotEqual:      {"OpNotEqual", []int{}},
+	OpGreaterThan:   {"OpGreaterThan", []int{}},
+	OpMinus:         {"OpMinus", []int{}},
+	OpBang:          {"OpBang", []int{}},
+	OpJumpNotTruthy: {"OpJumpNotTruthy", []int{2}},
+	OpJump:          {"OpJump", []int{2}},
+	OpNull:          {"OpNull", []int{}},
+	OpGetGlobal:     {"OpGetGlobal", []int{2}},
+	OpSetGlobal:     {"OpSetGlobal", []int{2}},
+	OpGetLocal:      {"OpGetLocal", []int{1}},
+	OpSetLocal:      {"OpSetLocal", []int{1}},
+	OpArray:         {"OpArray", []int{2}},
+	OpHash:          {"OpHash", []int{2}},
+	OpIndex:         {"OpIndex", []int{}},
+	OpCall:          {"Opcall", []int{1}},
+	OpReturnValue:   {"OpReturnValue", []int{}},
+	OpReturn:        {"OpReturn", []int{2}},
+	OpGetBuiltin:    {"OpGetBuiltin", []int{1}},
 }
 
 func Lookup(op byte) (*Definition, error) {
@@ -108,26 +110,26 @@ func Make(op Opcode, operands ...int) []byte {
 		case 2:
 			binary.BigEndian.PutUint16(instuctions[offset:], uint16(o))
 		case 1:
-			 instuctions[offset] = byte(o)	
+			instuctions[offset] = byte(o)
 		}
 		offset += width
 	}
 	return instuctions
 }
 
-func ReadOperands(def *Definition, ins Instructions) ([]int, int){
+func ReadOperands(def *Definition, ins Instructions) ([]int, int) {
 	operands := make([]int, len(def.OpearandWidths))
 
-	offset :=0
+	offset := 0
 
 	for i, width := range def.OpearandWidths {
 		switch width {
 		case 2:
 			operands[i] = int(ReadUint16(ins[offset:]))
 		case 1:
-			operands[i] = int(ReadUint8(ins[offset:]))	
+			operands[i] = int(ReadUint8(ins[offset:]))
 		}
-		
+
 		offset += width
 	}
 
@@ -147,17 +149,17 @@ func (ins Instructions) String() string {
 
 	i := 0
 
-	for i < len(ins){
+	for i < len(ins) {
 		def, err := Lookup(ins[i])
 
 		if err != nil {
-			fmt.Fprintf(&out, "ERROR: %s\n",err)
+			fmt.Fprintf(&out, "ERROR: %s\n", err)
 			continue
 		}
-		
+
 		operands, read := ReadOperands(def, ins[i+1:])
 
-		fmt.Fprintf(&out, "%04d %s\n",i, ins.fmtInstruction(def, operands))
+		fmt.Fprintf(&out, "%04d %s\n", i, ins.fmtInstruction(def, operands))
 		i += 1 + read
 	}
 	return out.String()
@@ -173,7 +175,7 @@ func (ins Instructions) fmtInstruction(def *Definition, operands []int) string {
 	switch operandsCount {
 	case 0:
 		return def.Name
-	case 1 :
+	case 1:
 		return fmt.Sprintf("%s %d", def.Name, operands[0])
 	}
 
