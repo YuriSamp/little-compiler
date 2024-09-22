@@ -411,12 +411,12 @@ func TestCallingFunctionsWithWrongArguments(t *testing.T) {
 func TestBuiltinsFunctions(t *testing.T) {
 	tests := []vmTestCase{
 		{`len("")`, 0},
-		{`len("five")`, 5},
+		{`len("five")`, 4},
 		{`len("hello world")`, 11},
 		{
 			"len(1)",
 			&object.Error{
-				Message: "argument to `len` not suported, got INTERGER",
+				Message: "argument to `len` not suported, got INTEGER",
 			},
 		},
 		{`len("one", "two")`,
@@ -443,9 +443,9 @@ func TestBuiltinsFunctions(t *testing.T) {
 		{`rest([1,2,3])`, []int{2, 3}},
 		{`rest([])`, Null},
 		{"push([],1)", []int{1}},
-		{"push(1,1 )",
+		{"push(1, 1)",
 			&object.Error{
-				Message: "arugment to `push` must be ARRAY, got INTEGER",
+				Message: "argument to `push` must be ARRAY, got INTEGER",
 			},
 		},
 	}
