@@ -44,6 +44,7 @@ const (
 	OpReturn
 	OpGetBuiltin
 	OpClosure
+	OpGetFree
 )
 
 var definitions = map[Opcode]*Definition{
@@ -75,6 +76,7 @@ var definitions = map[Opcode]*Definition{
 	OpReturn:        {"OpReturn", []int{2}},
 	OpGetBuiltin:    {"OpGetBuiltin", []int{1}},
 	OpClosure:       {"OpClosure", []int{2, 1}},
+	OpGetFree:       {"OpGetFree", []int{1}},
 }
 
 func Lookup(op byte) (*Definition, error) {
