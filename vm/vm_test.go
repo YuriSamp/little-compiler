@@ -453,6 +453,152 @@ func TestBuiltinsFunctions(t *testing.T) {
 	runVmTest(t, tests)
 }
 
+func TestClosures(t *testing.T) {
+	tests := []vmTestCase{
+		{
+			input: `
+				let newClosure = fn(a) {
+					fn() {a;};
+				};
+
+			 let closure = newClosure(99)
+			 closure();		
+			`,
+			expected: 99,
+		},
+		{
+			input: `
+				let newAdder = fn(a, b) {
+					fn(c) { a + b + c};
+				};
+
+				let adder = newAdder(1,2);
+				adder(8)
+			`,
+			expected: 11,
+		},
+		{
+			input: `
+				let newAdder = fn(a, b) {
+					 let c = a + b
+					 fn(d) { c + d };
+				};
+
+				let adder = newAdder(1,2);
+				adder(8)
+			`,
+			expected: 11,
+		},
+		{
+			input: `
+				let newAdder = fn(a, b) {
+					 let c = a + b
+					 fn(d) {
+					 	let e = d + c
+						fn(f) {e + f}
+					 };
+				};
+
+				let adder = newAdder(1,2)(3)(8);
+			`,
+			expected: 14,
+		},
+		{
+			input: `
+				let newClosure = fn (a, b) {
+					 let one = fn() { a; };
+					 let two = fn() { b;};
+					 fn() {one() + two()}
+				};
+
+				let closure = newClosure(1,2);
+				closure()
+			`,
+			expected: 3,
+		},
+	}
+
+	runVmTest(t, tests)
+}
+
+func TestRecursiveFunctions(t *testing.T) {
+	tests := []vmTestCase{
+		{
+			input: `
+				let countDown = fn(x) {
+					if (x == 0) {
+						return 0
+					} else {
+					 countDown(x -1)}
+				};
+
+				countDown(1)
+			`,
+			expected: 0,
+		},
+		{
+			input: `
+				let countDown = fn(x) {
+					if (x == 0) {
+						return 0
+					} else {
+					 countDown(x -1)}
+				};
+
+				let wrapper = fn() {
+					countDown(1)
+				}
+
+				wrapper()
+			`,
+			expected: 0,
+		},
+		{
+			input: `
+				let wrapper = fn() {
+					let countDown = fn(x) {
+						if (x == 0) {
+							return 0
+						} else {
+					 		countDown(x -1);
+						}
+					};
+					countDown(1)
+				}
+
+				wrapper()
+			`,
+			expected: 0,
+		},
+	}
+
+	runVmTest(t, tests)
+}
+
+func TestRecursiveFibonacci(t *testing.T) {
+	tests := []vmTestCase{
+		{
+			input: `
+				let fibonacci = fn(x) {
+					if (x == 0 ) {
+						return x
+					} else {
+							if( x == 1) {
+								return 1
+							} else {
+								fibonacci(x -1) + fibonacci(x -2);
+						}
+					}
+				}
+				fibonacci(15)
+			`,
+			expected: 610,
+		},
+	}
+
+	runVmTest(t, tests)
+}
+
 func runVmTest(t *testing.T, tests []vmTestCase) {
 	t.Helper()
 
